@@ -34,7 +34,7 @@ function σL12(model::RheoModel, load_sim::RheoTimeData)
     return σ
 end
 
-function objA(data::RheoTimeData, model::RheoModel, params, g)
+function objA(data::RheoTimeData, model::RheoModel, params, g, verbose::Bool = false)
   
     time = copy(data.t)
     num_points = size(time,1)
@@ -49,13 +49,14 @@ function objA(data::RheoTimeData, model::RheoModel, params, g)
     cost = sum((measured .- cᵦ*ϵfdot).^2)/num_points
 
     
-
-    println("cᵦ ", round(cᵦ, digits = 5), " ", "β ", round(β, digits = 5), " ", cost)
+    if verbose
+        println("cᵦ ", round(cᵦ, digits = 5), " ", "β ", round(β, digits = 5), " ", cost)
+    end
 
     return cost
 end
 
-function objB(data::RheoTimeData, model::RheoModel, params, g)
+function objB(data::RheoTimeData, model::RheoModel, params, g, verbose::Bool = false)
 
     return 0
 end
@@ -64,7 +65,7 @@ function objR(model_i::RheoModel, load_sim::RheoTimeData)
     return 0
 end
 
-function objL1(data::RheoTimeData, model::RheoModel, params, g)
+function objL1(data::RheoTimeData, model::RheoModel, params, g, verbose::Bool = false)
 
     strain = copy(load_sim.ϵ)
     time = copy(load_sim.t)
@@ -78,13 +79,14 @@ function objL1(data::RheoTimeData, model::RheoModel, params, g)
     ϵfdot = L1(strain, time, dt, β)
     cost = sum((measured .- cᵦ*ϵfdot).^2)/num_points
 
-    println("cᵦ ", round(cᵦ, digits = 5), " ", "β ", round(β, digits = 5), " ", cost)
-
+    if verbose
+        println("cᵦ ", round(cᵦ, digits = 5), " ", "β ", round(β, digits = 5), " ", cost)
+    end
     return cost
 
 end
 
-function objL12(data::RheoTimeData, model::RheoModel, params, g)
+function objL12(data::RheoTimeData, model::RheoModel, params, g, verbose::Bool = false)
 
     strain = copy(load_sim.ϵ)
     time = copy(load_sim.t)
@@ -98,7 +100,9 @@ function objL12(data::RheoTimeData, model::RheoModel, params, g)
     ϵfdot = L12(strain, time, dt, β)
     cost = sum((measured .- cᵦ*ϵfdot).^2)/num_points
 
-    println("cᵦ ", round(cᵦ, digits = 5), " ", "β ", round(β, digits = 5), " ", cost)
+    if verbose
+        println("cᵦ ", round(cᵦ, digits = 5), " ", "β ", round(β, digits = 5), " ", cost)
+    end
 
     return cost
     

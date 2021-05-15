@@ -43,7 +43,7 @@ using RHEOS
 # end
 
 function myleastsquares(;params_init::Array{Float64, 1}, low_bounds::Array{Float64, 1}, hi_bounds::Array{Float64, 1},
-    data::RheoTimeData, model::RheoModel, obj, _rel_tol = 1e-4)
+    data::RheoTimeData, model::RheoModel, obj, _rel_tol = 1e-4, verbose::Bool = false)
 
     # initialise NLOpt.Opt object with :LN_SBPLX Subplex algorithm
     opt = Opt(:LN_SBPLX, length(params_init))
@@ -62,17 +62,19 @@ function myleastsquares(;params_init::Array{Float64, 1}, low_bounds::Array{Float
     # set relative tolerance
     xtol_rel!(opt, _rel_tol)
 
-    println(opt.xtol_rel)
+    # println(opt.xtol_rel)
 
     # Convert to float64 to avoid conversion by NLOpt
     params_init = convert(Vector{Float64},params_init)
 
-    min_objective!(opt, (params_init, g) -> obj(data, model, params_init, g))
+    min_objective!(opt, (params_init, g) -> obj(data, model, params_init, g, verbose))
 
     (minf, minx, ret) = NLopt.optimize(opt, params_init)
 
     numevals = opt.numevals # the number of function evaluations
-    println("got $minf at $minx after $numevals iterations (returned $ret)")
+    if verbose
+        println("got $minf at $minx after $numevals iterations (returned $ret)")
+    end
 
     return (minf, minx, ret)
 

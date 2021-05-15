@@ -95,9 +95,9 @@ version = "0.12.8"
 
 [[Compat]]
 deps = ["Base64", "Dates", "DelimitedFiles", "Distributed", "InteractiveUtils", "LibGit2", "Libdl", "LinearAlgebra", "Markdown", "Mmap", "Pkg", "Printf", "REPL", "Random", "SHA", "Serialization", "SharedArrays", "Sockets", "SparseArrays", "Statistics", "Test", "UUIDs", "Unicode"]
-git-tree-sha1 = "0a817fbe51c976de090aa8c997b7b719b786118d"
+git-tree-sha1 = "0900bc19193b8e672d9cd477e6cd92d9e7c02f99"
 uuid = "34da2185-b29b-5c13-b0c7-acf172513d20"
-version = "3.28.0"
+version = "3.29.0"
 
 [[CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -763,9 +763,9 @@ uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 
 [[RHEOS]]
 deps = ["DSP", "DataStructures", "DelimitedFiles", "Dierckx", "Documenter", "FunctionWrappers", "ImageFiltering", "InverseLaplace", "JLD2", "NLopt", "Pkg", "QuadGK", "Random", "SpecialFunctions", "Test"]
-git-tree-sha1 = "d6332925c4d749b633aa16b48ad1a448b535de49"
+git-tree-sha1 = "b925ae7b8e119c34fa3eb94e6ca9f7df6ad4544b"
 repo-rev = "iib-dev"
-repo-url = "C:\\Users\\sanja\\OneDrive\\Documents\\Engineering IIB\\IIB Project\\code\\RHEOS.jl"
+repo-url = "https://github.com/JuliaRheology/RHEOS.jl.git"
 uuid = "728860ae-c896-11e8-0b91-0f38ecad5046"
 version = "0.9.3"
 
