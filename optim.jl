@@ -1,8 +1,49 @@
 using NLopt
 using BenchmarkTools
+using RHEOS
+
+# include("caputo.jl")
+
+# count = 0
+# function springpot_cost_DE(data, model, params, g)
+
+#     cᵦ = params[1]
+#     β = params[2]
+
+#     measured = copy(data.σ)
+#     time = copy(data.t)
+#     strain = copy(data.ϵ)
+
+#     global count+=1
+
+#     cost = 0
+
+   
+    
+#     num_points = size(measured,1)
+
+    
+#     dt = time[2] - time[1]
+
+#     # HOW TO CALCULATE THE FRACTIONAL DERIVATIVE BIT
+
+#     ϵfdot = L1(strain, time, dt, β)
+    
+
+#     # βₒ = 0.5
+#     # ϵfdot = (gamma(2+βₒ)/gamma(2+βₒ-β))*(time.^(1+βₒ-β))
+
+#     # Cost is the mean squared error # Diff eq
+#     cost = sum((measured .- cᵦ*ϵfdot).^2)/num_points
+    
+
+#     println("cᵦ ", round(cᵦ, digits = 5), " ", "β ", round(β, digits = 5), " ", count, " ", cost)
+
+#     return cost
+# end
 
 function myleastsquares(;params_init::Array{Float64, 1}, low_bounds::Array{Float64, 1}, hi_bounds::Array{Float64, 1},
-    data::RheoTimeData, model::RheoModel, obj::Function, _rel_tol = 1e-4)
+    data::RheoTimeData, model::RheoModel, obj, _rel_tol = 1e-4)
 
     # initialise NLOpt.Opt object with :LN_SBPLX Subplex algorithm
     opt = Opt(:LN_SBPLX, length(params_init))
@@ -36,3 +77,24 @@ function myleastsquares(;params_init::Array{Float64, 1}, low_bounds::Array{Float
     return (minf, minx, ret)
 
 end
+
+# # CREATE THE RHEOTIMEDATA
+# model_params = (cᵦ = 1.6, β = 0.5)
+# model = RheoModel(Springpot, model_params)
+# time_sim = timeline(t_start = 0, t_end = 8, step = 0.05)
+# # load_sim = strainfunction(time_sim, f)
+# # load_sim = strainfunction(time_sim, ramp(offset = 0.0, gradient = 1.0));
+# load_sim = strainfunction(time_sim, hstep(offset = 1.0, amp = 1.0));
+
+# data = modelpredict(load_sim, model, diff_method = "BD")
+
+# t = data.t
+# dt = t[2] - t[1]
+# σ = data.σ 
+# ϵ = data.ϵ
+
+# σ = convert(Vector{Float64}, σ)
+# ϵ = convert(Vector{Float64}, ϵ)
+# t = convert(Vector{Float64}, t)
+
+# myleastsquares(params_init = [2.0, 0.7], low_bounds = [0.0, 0.0], hi_bounds = [100.0, 1.0], data = data, model = model, obj = springpot_cost_DE)
