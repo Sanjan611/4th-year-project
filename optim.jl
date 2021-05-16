@@ -77,7 +77,7 @@ function myleastsquares(;params_init::Array{Float64, 1}, low_bounds::Array{Float
         println("got $minf at $minx after $numevals iterations (returned $ret)")
     end
 
-    return (minf, minx, ret)
+    return (minf, minx, ret, numevals)
 
 end
 

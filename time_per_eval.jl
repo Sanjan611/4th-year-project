@@ -17,11 +17,11 @@ objs = [objA, objB, objR, objL1, objL12]
 
 # DataFrame columns
 sigma, other = [], []
-duration = []
+stepsize = []
 p0_c, p0_b, lo_c, lo_b, hi_c, hi_b = [], [], [], [], [], []
 cs, bs, error, time_total = [], [], [], [] 
 
-durations = range(5, 20, length = 20)
+stepsizes = range(0.05, 0.2, length = 30)
 
 # Model and RheoTimeData 
 model_params = (cᵦ = 1.8, β = 0.3)
@@ -29,13 +29,12 @@ model = RheoModel(Springpot, model_params)
 model_i = RheoModel(Springpot_i, model_params)
 
 # arrays to store time and error
-timetakens = [[], [], [], [], []]
-errors = [[], [], [], [], []]
+time_per_evals = [[], [], [], [], []]
 
-for (k, dur) in enumerate(collect(durations))
+for (k, ss) in enumerate(collect(stepsizes))
     println("============= ",k," =============")
 
-    time_sim = timeline(t_start = 0, t_end = dur, step = 0.05)
+    time_sim = timeline(t_start = 0, t_end = 8, step = ss)
     load_sim = strainfunction(time_sim, t->f(t,model_params.β)); # f is the function from the paper
 
     σ = σA(model, load_sim)
@@ -50,9 +49,8 @@ for (k, dur) in enumerate(collect(durations))
                                     p0 = p0,
                                     lo = lo, 
                                     hi = hi,
-                                    return_stats = true
+                                    return_stats = true,
                                     )
-            println("Numevals: $numevals")
         
         elseif obj == objR
             fitted_model, timetaken, ret, minx, minf, numevals = 
@@ -62,8 +60,6 @@ for (k, dur) in enumerate(collect(durations))
                                     hi = hi,
                                     return_stats = true
                                     )
-            println("Numevals: $numevals")
-
         else
             (minf, minx, ret, numevals), timetaken, bytes, gctime, memalloc = 
                             @timed myleastsquares(params_init = [p0.cᵦ, p0.β], 
@@ -72,27 +68,19 @@ for (k, dur) in enumerate(collect(durations))
             println("Time: $timetaken s, Why: $ret, Parameters: $minx, Error: $minf, Numevals: $numevals")
         end
 
-        push!(timetakens[j], timetaken)
-        push!(errors[j], minf)
-            
-        
+        push!(time_per_evals[j], timetaken/numevals)
     
     end
 end
 
 legend_labels = ["A" "B" "R" "L1" "L12"]
 
-plt1 = plot(collect(durations), timetakens, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 3, legend=:outertopright, legendfontsize = 10)
-xlabel!("Experiment duration")
-ylabel!("Time taken for fitting")
-# title!("Time taken vs experiment duration")
-savefig("images/A_timetaken_duration.svg")
+plt1 = plot(collect(stepsizes), time_per_evals, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 3, legend=:outertopright, legendfontsize = 10)
+xlabel!("Step size Δt (s)")
+ylabel!("Time per objective evaluation (s)")
+# title!("Time taken vs step size")
+savefig("images/A_timepereval_stepsize.svg")
 display(plt1)
 
-plt2 = plot(collect(durations), errors, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 3, legend=:outertopright, legendfontsize = 10)
-xlabel!("Experiment duration")
-ylabel!("Error from fit")
-# title!("Obj error vs experiment duration")
-savefig("images/A_error_duration.svg")
-display(plt2)
+
 

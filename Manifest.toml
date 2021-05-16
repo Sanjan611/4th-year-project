@@ -82,10 +82,10 @@ uuid = "3da002f7-5984-5a60-b8a6-cbb66c0b333f"
 version = "0.10.12"
 
 [[ColorVectorSpace]]
-deps = ["ColorTypes", "Colors", "FixedPointNumbers", "LinearAlgebra", "SpecialFunctions", "Statistics", "StatsBase"]
-git-tree-sha1 = "4d17724e99f357bfd32afa0a9e2dda2af31a9aea"
+deps = ["ColorTypes", "FixedPointNumbers", "LinearAlgebra", "SpecialFunctions", "Statistics", "TensorCore"]
+git-tree-sha1 = "42a9b08d3f2f951c9b283ea427d96ed9f1f30343"
 uuid = "c3611d14-8923-5661-9e6a-0046d554d3a4"
-version = "0.8.7"
+version = "0.9.5"
 
 [[Colors]]
 deps = ["ColorTypes", "FixedPointNumbers", "Reexport"]
@@ -251,9 +251,9 @@ version = "3.3.9+7"
 
 [[FileIO]]
 deps = ["Pkg", "Requires", "UUIDs"]
-git-tree-sha1 = "d74fd0dae131104471c849f25ba1179fe0fadf47"
+git-tree-sha1 = "cfb694feaddf4f0381ef3cc9d4c0d8fc6b7e2ea7"
 uuid = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
-version = "1.8.2"
+version = "1.9.0"
 
 [[FixedPointNumbers]]
 deps = ["Statistics"]
@@ -775,7 +775,7 @@ uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 
 [[RHEOS]]
 deps = ["DSP", "DataStructures", "DelimitedFiles", "Dierckx", "Documenter", "FunctionWrappers", "ImageFiltering", "InverseLaplace", "JLD2", "NLopt", "Pkg", "QuadGK", "Random", "SpecialFunctions", "Test"]
-git-tree-sha1 = "b925ae7b8e119c34fa3eb94e6ca9f7df6ad4544b"
+git-tree-sha1 = "6eaeba38e19d1f4e8ba9483a67ec8b56b7775a93"
 repo-rev = "iib-dev"
 repo-url = "https://github.com/JuliaRheology/RHEOS.jl.git"
 uuid = "728860ae-c896-11e8-0b91-0f38ecad5046"
@@ -910,6 +910,12 @@ deps = ["DataAPI", "DataValueInterfaces", "IteratorInterfaceExtensions", "Linear
 git-tree-sha1 = "c9d2d262e9a327be1f35844df25fe4561d258dc9"
 uuid = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 version = "1.4.2"
+
+[[TensorCore]]
+deps = ["LinearAlgebra"]
+git-tree-sha1 = "1feb45f88d133a655e001435632f019a9a1bcdb6"
+uuid = "62fd8b95-f654-4bbd-a8a5-9c27f68ccd50"
+version = "0.1.1"
 
 [[Test]]
 deps = ["Distributed", "InteractiveUtils", "Logging", "Random"]

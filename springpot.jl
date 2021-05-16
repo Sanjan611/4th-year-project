@@ -46,7 +46,7 @@ for (i, σf) in enumerate(σfs)
         println("==================== ",i," =================== ", j, " =================== ")
 
         if obj == objB
-            fitted_model, timetaken, ret, minx, minf = 
+            fitted_model, timetaken, ret, minx, minf, numevals = 
                                     modelfit(data, Springpot, strain_imposed,
                                     p0 = p0,
                                     lo = lo, 
@@ -55,7 +55,7 @@ for (i, σf) in enumerate(σfs)
                                     )
         
         elseif obj == objR
-            fitted_model, timetaken, ret, minx, minf = 
+            fitted_model, timetaken, ret, minx, minf, numevals = 
                                     modelfit(data, Springpot_i, strain_imposed,
                                     p0 = p0,
                                     lo = lo, 
@@ -63,7 +63,7 @@ for (i, σf) in enumerate(σfs)
                                     return_stats = true
                                     )
         else
-            (minf, minx, ret), timetaken, bytes, gctime, memalloc = 
+            (minf, minx, ret, numevals), timetaken, bytes, gctime, memalloc = 
                             @timed myleastsquares(params_init = [p0.cᵦ, p0.β], 
                             low_bounds = [lo.cᵦ, lo.β], hi_bounds = [hi.cᵦ, hi.β], 
                             data = data, model = model, obj = obj, verbose = false)

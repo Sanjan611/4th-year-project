@@ -3,7 +3,7 @@ using SpecialFunctions
 using BenchmarkTools
 using DataFrames
 using CSV
-using PyPlot
+using Plots
 
 include("optim.jl")
 include("springpot_helper.jl")

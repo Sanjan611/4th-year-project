@@ -47,7 +47,7 @@ for (k, β) in enumerate(collect(βs))
         println("============= ",k," ============= ",j, " ============= ")
 
         if obj == objB
-            fitted_model, timetaken, ret, minx, minf = 
+            fitted_model, timetaken, ret, minx, minf, numevals = 
                                     modelfit(data, Springpot, strain_imposed,
                                     p0 = p0,
                                     lo = lo, 
@@ -56,7 +56,7 @@ for (k, β) in enumerate(collect(βs))
                                     )
         
         elseif obj == objR
-            fitted_model, timetaken, ret, minx, minf = 
+            fitted_model, timetaken, ret, minx, minf, numevals = 
                                     modelfit(data, Springpot_i, strain_imposed,
                                     p0 = p0,
                                     lo = lo, 
