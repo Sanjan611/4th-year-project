@@ -66,11 +66,11 @@ function objR(model_i::RheoModel, load_sim::RheoTimeData)
 end
 
 function objL1(data::RheoTimeData, model::RheoModel, params, g, verbose::Bool = false)
-
-    strain = copy(load_sim.ϵ)
-    time = copy(load_sim.t)
+    strain = copy(data.ϵ)
+    time = copy(data.t)
     dt = time[2] - time[1]
     num_points = size(time,1)
+
 
     cᵦ = params[1]
     β = params[2]
@@ -88,8 +88,8 @@ end
 
 function objL12(data::RheoTimeData, model::RheoModel, params, g, verbose::Bool = false)
 
-    strain = copy(load_sim.ϵ)
-    time = copy(load_sim.t)
+    strain = copy(data.ϵ)
+    time = copy(data.t)
     dt = time[2] - time[1]
     num_points = size(time,1)
 

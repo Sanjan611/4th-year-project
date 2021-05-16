@@ -16,7 +16,7 @@ timetaken_m = reshape(timetaken, (5,5))
 # x = range(0, 2π, length = 30)
 # heatmap(x, x, f, c = :autumn1)
 
-# heatmap(labels, labels, error_m, c = :haline)
+# heatmap(labels, labels, error_m, c = :haline)]
 # title!("Error")
 # xlabel!("σ")
 # ylabel!("How variable part is calculated")
