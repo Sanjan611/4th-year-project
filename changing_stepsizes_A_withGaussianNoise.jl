@@ -36,7 +36,7 @@ errors = [[], [], [], [], []]
 for (k, ss) in enumerate(collect(stepsizes))
     println("============= ",k," =============")
 
-    time_sim = timeline(t_start = 0, t_end = 10, step = ss)
+    time_sim = timeline(t_start = 0, t_end = 8, step = ss)
     load_sim = strainfunction(time_sim, t->f(t,model_params.β)); # f is the function from the paper
 
     σ = σA(model, load_sim)
@@ -70,48 +70,27 @@ for (k, ss) in enumerate(collect(stepsizes))
             println("Time: $timetaken s, Why: $ret, Parameters: $minx, Error: $minf")
         end
 
-        # push!(sigma, label[i])
-        # push!(other, label[j])
-        # push!(stepsize, ss)
-        # push!(p0_c, p0.cᵦ)
-        # push!(p0_b, p0.β)
-        # push!(lo_c, lo.cᵦ)
-        # push!(lo_b, lo.β)
-        # push!(hi_c, hi.cᵦ)
-        # push!(hi_b, hi.β)
-        # push!(cs, minx[1])
-        # push!(bs, minx[2])
-        # push!(error, minf)
-        # push!(time_total, timetaken)
-
         push!(timetakens[j], timetaken)
         push!(errors[j], minf)
             
-        
-    
     end
 end
 
-# df = DataFrame(sigma = sigma, other = other,
-#                 stepsize = stepsize,
-#                 p0_c = p0_c, p0_b = p0_b,
-#                 lo_c = lo_c, lo_b = lo_b,
-#                 hi_c = hi_c, hi_b = hi_b,
-#                 cs = cs, bs = bs, error = error, time_total = time_total)
-
-# CSV.write("springpot_1_stepsizes.csv", df)
-
 legend_labels = ["A" "B" "R" "L1" "L12"]
 
-plt1 = plot(collect(stepsizes), timetakens, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 2.5, legend=:outertopright)
-xlabel!("stepsize")
-ylabel!("time taken")
-title!("Time taken vs step size")
+
+plt1 = plot(collect(stepsizes), timetakens, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 3, legend=:outertopright, legendfontsize = 10)
+xlabel!("Step size Δt (s)")
+ylabel!("Time taken (s)")
+# title!("Time taken vs step size")
+savefig("images/A_timetaken_stepsize_withGaussianNoise.svg")
 display(plt1)
 
-plt2 = plot(collect(stepsizes), errors, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 2.5, legend=:outertopright)
-xlabel!("stepsize")
-ylabel!("objective function error")
-title!("Objective error vs step size")
+
+plt2 = plot(collect(stepsizes), errors, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 3, legend=:outertopright, legendfontsize = 10)
+xlabel!("Step size Δt (s)")
+ylabel!("Error from fit")
+# title!("Time taken vs objective error")
+savefig("images/A_error_stepsize_withGaussianNoise.svg")
 display(plt2)
 

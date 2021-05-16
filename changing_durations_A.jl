@@ -69,20 +69,6 @@ for (k, dur) in enumerate(collect(durations))
             println("Time: $timetaken s, Why: $ret, Parameters: $minx, Error: $minf")
         end
 
-        # push!(sigma, label[i])
-        # push!(other, label[j])
-        # push!(stepsize, ss)
-        # push!(p0_c, p0.cᵦ)
-        # push!(p0_b, p0.β)
-        # push!(lo_c, lo.cᵦ)
-        # push!(lo_b, lo.β)
-        # push!(hi_c, hi.cᵦ)
-        # push!(hi_b, hi.β)
-        # push!(cs, minx[1])
-        # push!(bs, minx[2])
-        # push!(error, minf)
-        # push!(time_total, timetaken)
-
         push!(timetakens[j], timetaken)
         push!(errors[j], minf)
             
@@ -91,26 +77,19 @@ for (k, dur) in enumerate(collect(durations))
     end
 end
 
-# df = DataFrame(sigma = sigma, other = other,
-#                 stepsize = stepsize,
-#                 p0_c = p0_c, p0_b = p0_b,
-#                 lo_c = lo_c, lo_b = lo_b,
-#                 hi_c = hi_c, hi_b = hi_b,
-#                 cs = cs, bs = bs, error = error, time_total = time_total)
-
-# CSV.write("springpot_1_stepsizes.csv", df)
-
 legend_labels = ["A" "B" "R" "L1" "L12"]
 
-plt1 = plot(collect(durations), timetakens, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 2.5, legend=:outertopright)
-xlabel!("duration")
-ylabel!("time taken")
-title!("Time taken vs experiment duration")
+plt1 = plot(collect(durations), timetakens, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 3, legend=:outertopright, legendfontsize = 10)
+xlabel!("Experiment duration")
+ylabel!("Time taken for fitting")
+# title!("Time taken vs experiment duration")
+savefig("images/A_timetaken_duration.svg")
 display(plt1)
 
-plt2 = plot(collect(durations), errors, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 2.5, legend=:outertopright)
-xlabel!("duration")
-ylabel!("objective function error")
-title!("Obj error vs experiment duration")
+plt2 = plot(collect(durations), errors, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 3, legend=:outertopright, legendfontsize = 10)
+xlabel!("Experiment duration")
+ylabel!("Error from fit")
+# title!("Obj error vs experiment duration")
+savefig("images/A_error_duration.svg")
 display(plt2)
 
