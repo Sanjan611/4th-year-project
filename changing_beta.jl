@@ -27,6 +27,7 @@ objs = [objA, objB, objR, objL1, objL12]
 # arrays to store time and error
 timetakens = [[], [], [], [], []]
 errors = [[], [], [], [], []]
+pred_βs = [[], [], [], [], []]
 
 for (k, β) in enumerate(collect(βs))
     println("============= ",k," =============")
@@ -72,6 +73,7 @@ for (k, β) in enumerate(collect(βs))
 
         push!(timetakens[j], timetaken)
         push!(errors[j], minf)
+        push!(pred_βs[j], minx[2])
             
         
     
@@ -93,4 +95,11 @@ ylabel!("Error from fit")
 # title!(" ")
 savefig("images/A_error_beta.svg")
 display(plt2)
+
+plt3 = plot(collect(βs), pred_βs, ls = :auto, label = legend_labels, linewidth = 3, legend=:outertopright, legendfontsize = 10)
+xlabel!("β")
+ylabel!("β after fitting")
+# title!(" ")
+savefig("images/A_predbeta_beta.svg")
+display(plt3)
 
