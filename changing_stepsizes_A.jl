@@ -38,7 +38,7 @@ for (k, ss) in enumerate(collect(stepsizes))
     time_sim = timeline(t_start = 0, t_end = 8, step = ss)
     load_sim = strainfunction(time_sim, t->f(t,model_params.β)); # f is the function from the paper
 
-    σ = σA(model, load_sim)
+    σ = σA(model, load_sim) # analytically
     data = RheoTimeData(σ = σ, ϵ = load_sim.ϵ, t = load_sim.t)
 
     for (j, obj) in enumerate(objs)

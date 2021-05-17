@@ -77,6 +77,7 @@ function objL1(data::RheoTimeData, model::RheoModel, params, g, verbose::Bool = 
 
     measured = data.σ
     ϵfdot = L1(strain, time, dt, β)
+    
     cost = sum((measured .- cᵦ*ϵfdot).^2)/num_points
 
     if verbose
