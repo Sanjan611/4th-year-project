@@ -8,26 +8,24 @@ using Plots
 include("optim.jl")
 include("springpot_helper.jl")
 
+############# OPTIMISATION INITIALISATION ##############
 p0 = (cᵦ = 2.0, β = 0.5)
 lo = (cᵦ = 0.0, β = 0.01)
 hi = (cᵦ = 100.0, β = 0.99)
 
+################### DEFINE SOME OTHER USEFUL VARIABLES #########################
 label = ["A", "B", "R", "L1", "L12"] # the different methods used to evaluate
 objs = [objA, objB, objR, objL1, objL12]
-
-# # DataFrame columns
-# sigma, other = [], []
-# duration = []
-# p0_c, p0_b, lo_c, lo_b, hi_c, hi_b = [], [], [], [], [], []
-# cs, bs, error, time_total = [], [], [], [] 
-
-βs = range(0.01, 0.99, length = 30)
-
 
 # arrays to store time and error
 timetakens = [[], [], [], [], []]
 errors = [[], [], [], [], []]
 pred_βs = [[], [], [], [], []]
+
+
+βs = range(0.01, 0.99, length = 30)
+
+######### EXPERIMENT #################
 
 for (k, β) in enumerate(collect(βs))
     println("============= ",k," =============")
@@ -40,7 +38,7 @@ for (k, β) in enumerate(collect(βs))
     time_sim = timeline(t_start = 0, t_end = 8, step = 0.05)
     load_sim = strainfunction(time_sim, t->f(t,model_params.β)); # f is the function from the paper
 
-    σ = σA(model, load_sim)
+    σ = σA(model, load_sim) # create simulated data using analytical expression
     data = RheoTimeData(σ = σ, ϵ = load_sim.ϵ, t = load_sim.t)
 
     for (j, obj) in enumerate(objs)
@@ -79,6 +77,8 @@ for (k, β) in enumerate(collect(βs))
     
     end
 end
+
+###################### PLOTS ##############################
 
 legend_labels = ["A" "B" "R" "L1" "L12"]
 

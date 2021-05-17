@@ -7,9 +7,18 @@ using CSV
 include("optim.jl")
 include("springpot_helper.jl")
 
+############# SET UP THE MODEL AND OPTIMISATION INITIALISATION ##############
+
+# Model and RheoTimeData 
+model_params = (cᵦ = 1.8, β = 0.3)
+model = RheoModel(Springpot, model_params)
+model_i = RheoModel(Springpot_i, model_params)
+
 p0 = (cᵦ = 2.0, β = 0.7)
 lo = (cᵦ = 0.0, β = 0.01)
 hi = (cᵦ = 100.0, β = 0.99)
+
+################### DEFINE SOME OTHER USEFUL VARIABLES #########################
 
 label = ["A", "B", "R", "L1", "L12"] # the different methods used to evaluate
 σfs = [σA, σB, σR, σL1, σL12]
@@ -23,10 +32,7 @@ cs, bs, error, time_total = [], [], [], []
 
 durations = range(5, 15, length = 10)
 
-# Model and RheoTimeData 
-model_params = (cᵦ = 1.8, β = 0.3)
-model = RheoModel(Springpot, model_params)
-model_i = RheoModel(Springpot_i, model_params)
+################## EXPERIMENT #################
 
 for (k, dur) in enumerate(collect(durations))
     println("============= ",k," =============")
@@ -92,6 +98,8 @@ for (k, dur) in enumerate(collect(durations))
     
     end
 end
+
+################## SAVE THE DATA TO A CSV FILE ##########################
 
 df = DataFrame(sigma = sigma, other = other,
                 duration = duration,

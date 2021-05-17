@@ -1,3 +1,6 @@
+# This script compares the 5 methods that could be used for objective function evaluation
+# in time and objective error. 
+
 using RHEOS
 using SpecialFunctions
 using BenchmarkTools
@@ -7,6 +10,7 @@ using CSV
 include("optim.jl")
 include("springpot_helper.jl")
 
+############# SET UP THE MODEL AND OPTIMISATION INITIALISATION ##############
 # Model and RheoTimeData 
 model_params = (cᵦ = 1.8, β = 0.3)
 model = RheoModel(Springpot, model_params)
@@ -19,6 +23,8 @@ p0 = (cᵦ = 2.0, β = 0.7)
 lo = (cᵦ = 0.0, β = 0.01)
 hi = (cᵦ = 100.0, β = 0.99)
 
+################### DEFINE SOME OTHER USEFUL VARIABLES #########################
+
 label = ["A", "B", "R", "L1", "L12"] # the different methods used to evaluate
 σfs = [σA, σB, σR, σL1, σL12]
 objs = [objA, objB, objR, objL1, objL12]
@@ -26,9 +32,9 @@ objs = [objA, objB, objR, objL1, objL12]
 # DataFrame columns
 sigma, other = [], []
 p0_c, p0_b, lo_c, lo_b, hi_c, hi_b = [], [], [], [], [], []
-cs, bs, error, time_total = [], [], [], [] 
+cs, bs, error, time_total = [], [], [], []  # NOTE: Using just "c" was giving error: Invalid redefinition of constant c
 
-# NOTE: Using just "c" was giving error: Invalid redefinition of constant c
+################## EXPERIMENT #################
 
 for (i, σf) in enumerate(σfs) 
     println("==================== ",i," ===================")
@@ -86,6 +92,8 @@ for (i, σf) in enumerate(σfs)
     end
  
 end
+
+################## SAVE THE DATA TO A CSV FILE ##########################
 
 df = DataFrame(sigma = sigma, other = other,
                 p0_c = p0_c, p0_b = p0_b,

@@ -8,29 +8,29 @@ using Plots
 include("optim.jl")
 include("springpot_helper.jl")
 
+############# SET UP THE MODEL AND OPTIMISATION INITIALISATION ##############
+
 p0 = (cᵦ = 2.0, β = 0.7)
 lo = (cᵦ = 0.0, β = 0.01)
 hi = (cᵦ = 100.0, β = 0.99)
-
-label = ["A", "B", "R", "L1", "L12"] # the different methods used to evaluate
-objs = [objA, objB, objR, objL1, objL12]
-
-# DataFrame columns
-sigma, other = [], []
-stepsize = []
-p0_c, p0_b, lo_c, lo_b, hi_c, hi_b = [], [], [], [], [], []
-cs, bs, error, time_total = [], [], [], [] 
-
-stepsizes = range(0.05, 0.2, length = 30)
 
 # Model and RheoTimeData 
 model_params = (cᵦ = 1.8, β = 0.3)
 model = RheoModel(Springpot, model_params)
 model_i = RheoModel(Springpot_i, model_params)
 
+################### DEFINE SOME OTHER USEFUL VARIABLES #########################
+
+label = ["A", "B", "R", "L1", "L12"] # the different methods used to evaluate
+objs = [objA, objB, objR, objL1, objL12]
+
 # arrays to store time and error
 timetakens = [[], [], [], [], []]
 errors = [[], [], [], [], []]
+
+stepsizes = range(0.05, 0.2, length = 30)
+
+################## EXPERIMENT #################
 
 for (k, ss) in enumerate(collect(stepsizes))
     println("============= ",k," =============")
@@ -74,6 +74,8 @@ for (k, ss) in enumerate(collect(stepsizes))
     
     end
 end
+
+######################### PLOTS #############################
 
 legend_labels = ["A" "B" "R" "L1" "L12"]
 

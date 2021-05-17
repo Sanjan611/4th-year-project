@@ -2,46 +2,6 @@ using NLopt
 using BenchmarkTools
 using RHEOS
 
-# include("caputo.jl")
-
-# count = 0
-# function springpot_cost_DE(data, model, params, g)
-
-#     cᵦ = params[1]
-#     β = params[2]
-
-#     measured = copy(data.σ)
-#     time = copy(data.t)
-#     strain = copy(data.ϵ)
-
-#     global count+=1
-
-#     cost = 0
-
-   
-    
-#     num_points = size(measured,1)
-
-    
-#     dt = time[2] - time[1]
-
-#     # HOW TO CALCULATE THE FRACTIONAL DERIVATIVE BIT
-
-#     ϵfdot = L1(strain, time, dt, β)
-    
-
-#     # βₒ = 0.5
-#     # ϵfdot = (gamma(2+βₒ)/gamma(2+βₒ-β))*(time.^(1+βₒ-β))
-
-#     # Cost is the mean squared error # Diff eq
-#     cost = sum((measured .- cᵦ*ϵfdot).^2)/num_points
-    
-
-#     println("cᵦ ", round(cᵦ, digits = 5), " ", "β ", round(β, digits = 5), " ", count, " ", cost)
-
-#     return cost
-# end
-
 function myleastsquares(;params_init::Array{Float64, 1}, low_bounds::Array{Float64, 1}, hi_bounds::Array{Float64, 1},
     data::RheoTimeData, model::RheoModel, obj, _rel_tol = 1e-4, verbose::Bool = false)
 
@@ -80,6 +40,43 @@ function myleastsquares(;params_init::Array{Float64, 1}, low_bounds::Array{Float
     return (minf, minx, ret, numevals)
 
 end
+
+####################### OTHER CODE TO HELP VEROFY THE FUNCTION WORKS #################
+
+# include("caputo.jl")
+
+# count = 0
+# function springpot_cost_DE(data, model, params, g)
+
+#     cᵦ = params[1]
+#     β = params[2]
+
+#     measured = copy(data.σ)
+#     time = copy(data.t)
+#     strain = copy(data.ϵ)
+
+#     global count+=1
+
+#     cost = 0
+
+#     num_points = size(measured,1)
+#     dt = time[2] - time[1]
+
+#     # HOW TO CALCULATE THE FRACTIONAL DERIVATIVE BIT
+
+#     ϵfdot = L1(strain, time, dt, β)
+#     # βₒ = 0.5
+#     # ϵfdot = (gamma(2+βₒ)/gamma(2+βₒ-β))*(time.^(1+βₒ-β))
+
+#     # Cost is the mean squared error # Diff eq
+#     cost = sum((measured .- cᵦ*ϵfdot).^2)/num_points
+    
+#     println("cᵦ ", round(cᵦ, digits = 5), " ", "β ", round(β, digits = 5), " ", count, " ", cost)
+
+#     return cost
+# end
+
+
 
 # # CREATE THE RHEOTIMEDATA
 # model_params = (cᵦ = 1.6, β = 0.5)

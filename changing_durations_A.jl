@@ -8,29 +8,28 @@ using Plots
 include("optim.jl")
 include("springpot_helper.jl")
 
-p0 = (cᵦ = 2.0, β = 0.7)
-lo = (cᵦ = 0.0, β = 0.01)
-hi = (cᵦ = 100.0, β = 0.99)
-
-label = ["A", "B", "R", "L1", "L12"] # the different methods used to evaluate
-objs = [objA, objB, objR, objL1, objL12]
-
-# DataFrame columns
-sigma, other = [], []
-duration = []
-p0_c, p0_b, lo_c, lo_b, hi_c, hi_b = [], [], [], [], [], []
-cs, bs, error, time_total = [], [], [], [] 
-
-durations = range(5, 20, length = 20)
+############# SET UP THE MODEL AND OPTIMISATION INITIALISATION ##############
 
 # Model and RheoTimeData 
 model_params = (cᵦ = 1.8, β = 0.3)
 model = RheoModel(Springpot, model_params)
 model_i = RheoModel(Springpot_i, model_params)
 
+p0 = (cᵦ = 2.0, β = 0.7)
+lo = (cᵦ = 0.0, β = 0.01)
+hi = (cᵦ = 100.0, β = 0.99)
+
+################### DEFINE SOME OTHER USEFUL VARIABLES #########################
+
+label = ["A", "B", "R", "L1", "L12"] # the different methods used to evaluate
+objs = [objA, objB, objR, objL1, objL12]
+
 # arrays to store time and error
 timetakens = [[], [], [], [], []]
 errors = [[], [], [], [], []]
+
+durations = range(5, 20, length = 20)
+
 
 for (k, dur) in enumerate(collect(durations))
     println("============= ",k," =============")
@@ -79,6 +78,8 @@ for (k, dur) in enumerate(collect(durations))
     
     end
 end
+
+##################### PLOTS ########################
 
 legend_labels = ["A" "B" "R" "L1" "L12"]
 
