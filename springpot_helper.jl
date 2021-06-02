@@ -3,13 +3,15 @@ using RHEOS
 include("caputo.jl")
 
 # STRAIN FUNCTION 
-function f(t, β)
-    return t.^(1+β)
+function f(t, k)
+    # return t.^(k+β)
+    return t.^(k)
 end
 
 # STRESS FUNCTION
-function σA(model::RheoModel, load_sim::RheoTimeData)
-    return model.params.cᵦ*(gamma(2+model.params.β)/gamma(2))*load_sim.t
+function σA(model::RheoModel, load_sim::RheoTimeData, k)
+    # return model.params.cᵦ*(gamma(k+model.params.β+1)/gamma(k+1))*(load_sim.t.^k)
+    return model.params.cᵦ*(gamma(k+1)/gamma(k-model.params.β+1))*(load_sim.t.^(k-model.params.β))
 end
 
 function σB(model::RheoModel, load_sim::RheoTimeData)
@@ -34,7 +36,7 @@ function σL12(model::RheoModel, load_sim::RheoTimeData)
     return σ
 end
 
-function objA(data::RheoTimeData, model::RheoModel, params, g, verbose::Bool = false)
+function objA(data::RheoTimeData, model::RheoModel, params, g; verbose::Bool = false)
   
     time = copy(data.t)
     num_points = size(time,1)
@@ -43,9 +45,9 @@ function objA(data::RheoTimeData, model::RheoModel, params, g, verbose::Bool = f
     β = params[2]
     βₒ = model.params.β
 
-
     measured = data.σ
-    ϵfdot = (gamma(2+βₒ)/gamma(2+βₒ-β))*(time.^(1+βₒ-β))
+    k = 2
+    ϵfdot = (gamma(k+1+βₒ)/gamma(k+1+βₒ-β))*(time.^(k+1+βₒ-β)) # OLD 
     cost = sum((measured .- cᵦ*ϵfdot).^2)/num_points
 
     
@@ -57,7 +59,24 @@ function objA(data::RheoTimeData, model::RheoModel, params, g, verbose::Bool = f
 end
 
 function objB(data::RheoTimeData, model::RheoModel, params, g, verbose::Bool = false)
+    strain = copy(data.ϵ)
+    time = copy(data.t)
+    dt = time[2] - time[1]
+    num_points = size(time,1)
 
+
+    cᵦ = params[1]
+    β = params[2]
+
+    measured = data.σ
+    ϵfdot = L1(strain, time, dt, β)
+    
+    cost = sum((measured .- cᵦ*ϵfdot).^2)/num_points
+
+    if verbose
+        println("cᵦ ", round(cᵦ, digits = 5), " ", "β ", round(β, digits = 5), " ", cost)
+    end
+    return cost
     return 0
 end
 

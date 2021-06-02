@@ -30,18 +30,19 @@ errors = [[], [], [], [], []]
 
 durations = range(5, 20, length = 20)
 
+k = 2
 
-for (k, dur) in enumerate(collect(durations))
-    println("============= ",k," =============")
+for (i, dur) in enumerate(collect(durations))
+    println("============= ",i," =============")
 
     time_sim = timeline(t_start = 0, t_end = dur, step = 0.05)
-    load_sim = strainfunction(time_sim, t->f(t,model_params.β)); # f is the function from the paper
+    load_sim = strainfunction(time_sim, t->f(t,model_params.β, k=k)); # f is the function from the paper
 
-    σ = σA(model, load_sim)
+    σ = σA(model, load_sim, k=k)
     data = RheoTimeData(σ = σ, ϵ = load_sim.ϵ, t = load_sim.t)
 
     for (j, obj) in enumerate(objs)
-        println("============= ",k," ============= ",j, " ============= ")
+        println("============= ",i," ============= ",j, " ============= ")
 
         if obj == objB
             fitted_model, timetaken, ret, minx, minf, numevals = 
@@ -87,13 +88,13 @@ plt1 = plot(collect(durations), timetakens, ls = :auto, label = legend_labels, y
 xlabel!("Experiment duration")
 ylabel!("Time taken for fitting")
 # title!("Time taken vs experiment duration")
-savefig("images/A_timetaken_duration.svg")
+savefig("images/A_timetaken_duration_k_"*string(k)*".svg")
 display(plt1)
 
 plt2 = plot(collect(durations), errors, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 3, legend=:outertopright, legendfontsize = 10)
 xlabel!("Experiment duration")
 ylabel!("Error from fit")
 # title!("Obj error vs experiment duration")
-savefig("images/A_error_duration.svg")
+savefig("images/A_error_duration_k_"*string(k)*".svg")
 display(plt2)
 

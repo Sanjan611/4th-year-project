@@ -1,8 +1,6 @@
 using RHEOS
 using SpecialFunctions
 using BenchmarkTools
-using DataFrames
-using CSV
 using Plots
 
 include("optim.jl")
@@ -12,37 +10,46 @@ include("springpot_helper.jl")
 
 p0 = (cᵦ = 2.0, β = 0.7)
 lo = (cᵦ = 0.0, β = 0.01)
-hi = (cᵦ = 100.0, β = 0.99)
+hi = (cᵦ = 10.0, β = 0.99)
 
 # Model and RheoTimeData 
-model_params = (cᵦ = 1.8, β = 0.3)
+model_params = (cᵦ = 1.8, β = 0.5)
 model = RheoModel(Springpot, model_params)
 model_i = RheoModel(Springpot_i, model_params)
 
 ################### DEFINE SOME OTHER USEFUL VARIABLES #########################
 
-label = ["A", "B", "R", "L1", "L12"] # the different methods used to evaluate
-objs = [objA, objB, objR, objL1, objL12]
+# label = ["A", "B", "R", "L1", "L12"] # the different methods used to evaluate
+# objs = [objA, objB, objR, objL1, objL12]
+
+# # arrays to store time and error
+# timetakens = [[], [], [], [], []]
+# errors = [[], [], [], [], []]
+
+label = ["B", "R", "L1", "L12"] # the different methods used to evaluate
+objs = [objB, objR, objL1, objL12]
 
 # arrays to store time and error
-timetakens = [[], [], [], [], []]
-errors = [[], [], [], [], []]
+timetakens = [[], [], [], []]
+errors = [[], [], [], []]
 
 stepsizes = range(0.05, 0.2, length = 30)
 
+λ = 2.5
+
 ################## EXPERIMENT #################
 
-for (k, ss) in enumerate(collect(stepsizes))
-    println("============= ",k," =============")
+for (i, ss) in enumerate(collect(stepsizes))
+    println("============= ",i," =============")
 
     time_sim = timeline(t_start = 0, t_end = 8, step = ss)
-    load_sim = strainfunction(time_sim, t->f(t,model_params.β)); # f is the function from the paper
+    load_sim = strainfunction(time_sim, t->f(t, λ)); # f is the function from the paper
 
-    σ = σA(model, load_sim) # analytically
+    σ = σA(model, load_sim, λ) # analytically
     data = RheoTimeData(σ = σ, ϵ = load_sim.ϵ, t = load_sim.t)
 
     for (j, obj) in enumerate(objs)
-        println("============= ",k," ============= ",j, " ============= ")
+        println("============= ",i," ============= ",j, " ============= ")
 
         if obj == objB
             fitted_model, timetaken, ret, minx, minf = 
@@ -70,20 +77,22 @@ for (k, ss) in enumerate(collect(stepsizes))
         end
 
         push!(timetakens[j], timetaken)
-        push!(errors[j], minf)     
+        push!(errors[j], abs(minf/σ[end]))     
     
     end
 end
 
 ######################### PLOTS #############################
 
-legend_labels = ["A" "B" "R" "L1" "L12"]
+# legend_labels = ["A" "B" "R" "L1" "L12"]
+legend_labels = ["B" "R" "L1" "L12"]
 
 plt1 = plot(collect(stepsizes), timetakens, ls = :auto, label = legend_labels, yaxis=:log, linewidth = 3, legend=:outertopright, legendfontsize = 10)
-xlabel!("Step size Δt (s)")
-ylabel!("Time taken (s)")
+xlabel!("Step size Δt")
+ylabel!("(Log) Time taken (s)")
 # title!("Time taken vs step size")
-savefig("images/A_timetaken_stepsize.svg")
+title!("λ = " * string(λ))
+savefig("images/A_timetaken_stepsize_lambda_"*string(λ)*".svg")
 display(plt1)
 
 
@@ -91,6 +100,7 @@ plt2 = plot(collect(stepsizes), errors, ls = :auto, label = legend_labels, yaxis
 xlabel!("Step size Δt (s)")
 ylabel!("Error from fit")
 # title!("Time taken vs objective error")
-savefig("images/A_error_stepsize.svg")
+title!("λ = " * string(λ))
+savefig("images/A_error_stepsize_lambda_"*string(λ)*".svg")
 display(plt2)
 

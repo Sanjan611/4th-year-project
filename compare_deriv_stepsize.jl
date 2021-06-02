@@ -13,6 +13,8 @@ type = ["B", "R", "L1", "L12"]
 
 stepsizes = [0.01, 0.03, 0.05, 0.07, 0.09]
 
+k = 3
+
 for (i, σi) in enumerate(σs)
     # Iterate over the 4 different derivative calc methods
 
@@ -22,10 +24,11 @@ for (i, σi) in enumerate(σs)
     for (j,ss) in enumerate(stepsizes)
         # Iterate over the step sizes
 
+      
         time_sim = timeline(t_start = 0, t_end = 10, step = ss)
-        load_sim = strainfunction(time_sim, t->f(t,model_params.β));
+        load_sim = strainfunction(time_sim, t->f(t,model_params.β, k=k));
 
-        σ = σA(model, load_sim)
+        σ = σA(model, load_sim, k=k)
         t = time_sim.t
         
         if σi == σR
@@ -33,8 +36,15 @@ for (i, σi) in enumerate(σs)
         else
             e = abs.(σ .- σi(model, load_sim))
         end
+        e = e./σ
 
         push!(errors, e)
+
+        # # Printing error of Boltzmann
+        # if i==1
+        #     println(e[1])
+        # end
+        
         push!(timepoints, t)
     end 
 
@@ -43,8 +53,8 @@ for (i, σi) in enumerate(σs)
                 linewidth=2.0, legendfontsize = 10)
     xlabel!("time point")
     ylabel!("absolute error")
-    title!("Changing step size. Deriv method = " * type[i])
-    savefig("images/" * "deriv_eval_error_" * type[i] * ".svg")
+    title!("Changing step size. Method = " * type[i] * " k="*string(k))
+    savefig("images/" * "deriv_eval_error_" * type[i] * "_k_"*string(k)*".svg")
     display(plt)
 
 end

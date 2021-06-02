@@ -1,6 +1,7 @@
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+MittagLeffler = "9c257583-4f8f-53fd-abd9-c69d5080dd54"
 NLopt = "76087f3c-5699-56af-9a33-bf431cd00edd"
 Noise = "81d43f40-5267-43b7-ae1c-8b967f377efa"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
